@@ -31,6 +31,7 @@ fun MainComponent(modifier: Modifier = Modifier) {
         ) {
             Text(
                 text = stringResource(R.string.app_name),
+                color = GroshTheme.colors.primaryText,
                 style = MaterialTheme.typography.headlineMedium
             )
         }

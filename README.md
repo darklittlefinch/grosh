@@ -32,6 +32,34 @@ The current UI entry points are:
 
 Dependency and project plugin versions are defined in [gradle/libs.versions.toml](gradle/libs.versions.toml). The Gradle Wrapper version and Gradle JVM criteria are defined in [gradle/wrapper/gradle-wrapper.properties](gradle/wrapper/gradle-wrapper.properties) and [gradle/gradle-daemon-jvm.properties](gradle/gradle-daemon-jvm.properties).
 
+## Design system
+
+Wrap app content in `GroshTheme`. It follows the system light/dark setting by default; pass `darkTheme = false` or `darkTheme = true` to select a theme explicitly. Dynamic wallpaper colors are disabled so the app uses its defined palette.
+
+`LightColors.kt` and `DarkColors.kt` define the palettes. `GroshColors` provides named roles through `GroshTheme.colors`, including `screenBackground`, `cardBackground`, `listItemBackground`, `primaryText`, `secondaryText`, `accent`, `income`, and `expense`.
+
+```kotlin
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import dev.emoritz.grosh.ui.theme.GroshTheme
+import dev.emoritz.grosh.ui.theme.extensions.rowAmount
+
+// Inside GroshTheme content:
+Text(
+    text = "+12 500,50 ₽",
+    color = GroshTheme.colors.income,
+    style = MaterialTheme.typography.rowAmount
+)
+```
+
+Material 3 components receive a `ColorScheme` derived from the same palette. Theme selection is handled once in `GroshTheme`; components read colors without checking the active theme. Category colors are available through `GroshTheme.colors.categories`, for example `categories.blue.chartSegment`, `categories.blue.iconBackground`, and `categories.blue.icon`. The twelve chromatic colors are available for custom categories; `gray` is reserved for "Other", and `remainingChartSegment` colors the aggregated "Remaining" chart segment.
+
+Typography uses bundled Manrope Medium (500), SemiBold (600), and Bold (700) fonts and works offline. Use `MaterialTheme.typography` for the approved text roles. Amount styles (`displaySmall`, `headlineLarge`, `headlineSmall`, and the `rowAmount` extension) enable tabular digits with `tnum`. `rowAmount` uses 16/24 sp and Bold; ordinary `bodyLarge` text uses Medium. Styles at 24 sp and above use -1% letter spacing. Additional Material roles reuse the approved scale. The font license is bundled in [manrope_license.txt](app/src/main/res/raw/manrope_license.txt).
+
+Debug-only examples live in [DesignSystemPreviewComponent.kt](app/src/debug/java/dev/emoritz/grosh/ui/compose/preview/DesignSystemPreviewComponent.kt). Open the file in Android Studio's Compose Preview to inspect core colors, all category colors, typography, income/expense amounts, and long amounts with and without a currency symbol. Each example has light and dark variants; typography also has variants at font scale 1.3. These previews use the theme directly and do not require Koin or runtime app navigation.
+
+The theme uses stable Material 3 APIs. `MaterialExpressiveTheme` and `MotionScheme.expressive()` are deferred until available in a stable release, in accordance with the project's dependency policy. The profile theme selector and persistence of the user's choice belong to the profile feature.
+
 ## Dependency injection
 
 Koin is initialized once in `GroshApplication.initializeKoin()`, called from `Application.onCreate()`. The application class is registered in the manifest. Compose uses this existing container automatically.
