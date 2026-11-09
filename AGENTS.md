@@ -62,6 +62,11 @@ Version 1.0.0, epic GROSH-1 with subtasks GROSH-9 through GROSH-15:
 * Write commit messages, PR titles, and PR descriptions in English only.
 * Do not include AI attribution in commits or PRs: no attribution to Claude Code, Codex, or other AI tools, such as `Co-Authored-By: Claude ...`, `🤖 Generated with Claude Code`, or similar lines.
 
+## Dependency versions
+
+* When adding or updating libraries and frameworks, use the latest stable release.
+* Do not use prerelease versions, including alpha, beta, release candidate (RC), or snapshot builds.
+
 ## Technology stack
 
 * Kotlin, minSdk 26 (Android 8.0).
